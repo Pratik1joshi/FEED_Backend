@@ -1,6 +1,7 @@
 const express = require('express');
 const TeamMembers = require('../models/TeamMembers');
 const TeamSettings = require('../models/TeamSettings');
+const db = require('../config/database');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
@@ -114,6 +115,149 @@ router.get('/search', async (req, res) => {
       message: 'Error searching team members', 
       error: error.message 
     });
+  }
+});
+
+/* ==================================================
+   DYNAMIC DEPARTMENTS & ROLES API (NEW)
+================================================== */
+
+// --- DEPARTMENTS ---
+// GET /api/team/departments
+router.get('/departments', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM departments ORDER BY name ASC');
+    res.json({ success: true, data: rows || [] });
+  } catch (error) {
+    console.error('Error fetching departments:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// POST /api/team/departments
+router.post('/departments', auth, async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    if (!name) return res.status(400).json({ success: false, message: 'Name is required' });
+    
+    const dbResult = await db.query(
+      'INSERT INTO departments (name, description) VALUES (?, ?)',
+      [name, description || null]
+    );
+    const newId = dbResult.insertId;
+    
+    // Attempt to refetch safely
+    let fetched = null;
+    if (newId) {
+       const { rows: newRow } = await db.query('SELECT * FROM departments WHERE id = ?', [newId]);
+       fetched = newRow[0];
+    }
+    
+    res.status(201).json({ success: true, data: fetched || { id: newId, name, description } });
+  } catch (error) {
+    console.error('Error creating department:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// PUT /api/team/departments/:id
+router.put('/departments/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    if (!name) return res.status(400).json({ success: false, message: 'Name is required' });
+    
+    await db.query(
+      'UPDATE departments SET name = ?, description = ? WHERE id = ?',
+      [name, description || null, id]
+    );
+    const { rows: updated } = await db.query('SELECT * FROM departments WHERE id = ?', [id]);
+    
+    res.json({ success: true, data: updated[0] });
+  } catch (error) {
+    console.error('Error updating department:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// DELETE /api/team/departments/:id
+router.delete('/departments/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.query('DELETE FROM departments WHERE id = ?', [id]);
+    res.json({ success: true, message: 'Department deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting department:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// --- ROLES ---
+// GET /api/team/roles
+router.get('/roles', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM team_roles ORDER BY name ASC');
+    res.json({ success: true, data: rows || [] });
+  } catch (error) {
+    console.error('Error fetching roles:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// POST /api/team/roles
+router.post('/roles', auth, async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    if (!name) return res.status(400).json({ success: false, message: 'Name is required' });
+    
+    const dbResult = await db.query(
+      'INSERT INTO team_roles (name, description) VALUES (?, ?)',
+      [name, description || null]
+    );
+    const newId = dbResult.insertId;
+    
+    let fetched = null;
+    if (newId) {
+      const { rows: newRow } = await db.query('SELECT * FROM team_roles WHERE id = ?', [newId]);
+      fetched = newRow[0];
+    }
+    
+    res.status(201).json({ success: true, data: fetched || { id: newId, name, description } });
+  } catch (error) {
+    console.error('Error creating role:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// PUT /api/team/roles/:id
+router.put('/roles/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    if (!name) return res.status(400).json({ success: false, message: 'Name is required' });
+    
+    await db.query(
+      'UPDATE team_roles SET name = ?, description = ? WHERE id = ?',
+      [name, description || null, id]
+    );
+    const { rows: updated } = await db.query('SELECT * FROM team_roles WHERE id = ?', [id]);
+    
+    res.json({ success: true, data: updated[0] });
+  } catch (error) {
+    console.error('Error updating role:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// DELETE /api/team/roles/:id
+router.delete('/roles/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.query('DELETE FROM team_roles WHERE id = ?', [id]);
+    res.json({ success: true, message: 'Role deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting role:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }
 });
 
