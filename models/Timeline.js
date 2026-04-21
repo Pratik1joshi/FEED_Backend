@@ -18,7 +18,7 @@ class Timeline {
     const result = await query(`
       INSERT INTO timeline (year, title, description, icon, category, featured, is_active, sort_order)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-      RETURNING *
+      
     `, [
       timeline.year,
       timeline.title,
@@ -166,7 +166,7 @@ class Timeline {
       UPDATE timeline 
       SET ${updates.join(', ')}
       WHERE id = $${++paramCount} AND is_active = true
-      RETURNING *
+      
     `, values);
 
     return result.rows[0];
@@ -175,7 +175,7 @@ class Timeline {
   // Soft delete timeline item
   static async deleteById(id) {
     const result = await query(
-      'UPDATE timeline SET is_active = false WHERE id = $1 RETURNING *',
+      'UPDATE timeline SET is_active = false WHERE id = $1 ',
       [id]
     );
     return result.rows[0];

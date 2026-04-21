@@ -1,8 +1,12 @@
 const express = require('express');
 const TeamMembers = require('../models/TeamMembers');
+const TeamSettings = require('../models/TeamSettings');
 const auth = require('../middleware/auth');
 
 const router = express.Router();
+
+const isClientError = (message = '') =>
+  /required|invalid|already exists|cannot delete|not allowed|assigned/i.test(message);
 
 // GET /api/team - Get all team members
 router.get('/', async (req, res) => {
@@ -109,6 +113,127 @@ router.get('/search', async (req, res) => {
       success: false, 
       message: 'Error searching team members', 
       error: error.message 
+    });
+  }
+});
+
+// GET /api/team/settings - Get role and department settings
+router.get('/settings', async (req, res) => {
+  try {
+    const includeInactive = req.query.includeInactive === 'true';
+    const settings = await TeamSettings.getGroupedOptions({ includeInactive });
+
+    res.json({
+      success: true,
+      data: settings
+    });
+  } catch (error) {
+    console.error('Error fetching team settings:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching team settings',
+      error: error.message
+    });
+  }
+});
+
+// GET /api/team/settings/:type - Get settings by type (role or department)
+router.get('/settings/:type', async (req, res) => {
+  try {
+    const { type } = req.params;
+    const includeInactive = req.query.includeInactive === 'true';
+    const options = await TeamSettings.getOptionsByType(type, { includeInactive });
+
+    res.json({
+      success: true,
+      data: options
+    });
+  } catch (error) {
+    console.error('Error fetching team setting options:', error);
+    const statusCode = isClientError(error.message) ? 400 : 500;
+    res.status(statusCode).json({
+      success: false,
+      message: 'Error fetching team setting options',
+      error: error.message
+    });
+  }
+});
+
+// POST /api/team/settings - Create role/department setting (Admin only)
+router.post('/settings', auth, async (req, res) => {
+  try {
+    const createdOption = await TeamSettings.createOption(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: createdOption,
+      message: 'Team setting created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating team setting option:', error);
+    const statusCode = isClientError(error.message) ? 400 : 500;
+    res.status(statusCode).json({
+      success: false,
+      message: 'Error creating team setting option',
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/team/settings/:id - Update role/department setting (Admin only)
+router.put('/settings/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedOption = await TeamSettings.updateOption(id, req.body);
+
+    if (!updatedOption) {
+      return res.status(404).json({
+        success: false,
+        message: 'Team setting option not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: updatedOption,
+      message: 'Team setting updated successfully'
+    });
+  } catch (error) {
+    console.error('Error updating team setting option:', error);
+    const statusCode = isClientError(error.message) ? 400 : 500;
+    res.status(statusCode).json({
+      success: false,
+      message: 'Error updating team setting option',
+      error: error.message
+    });
+  }
+});
+
+// DELETE /api/team/settings/:id - Delete role/department setting (Admin only)
+router.delete('/settings/:id', auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedOption = await TeamSettings.deleteOption(id);
+
+    if (!deletedOption) {
+      return res.status(404).json({
+        success: false,
+        message: 'Team setting option not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: deletedOption,
+      message: 'Team setting deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error deleting team setting option:', error);
+    const statusCode = isClientError(error.message) ? 400 : 500;
+    res.status(statusCode).json({
+      success: false,
+      message: 'Error deleting team setting option',
+      error: error.message
     });
   }
 });

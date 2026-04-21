@@ -179,7 +179,7 @@ class SiteSettings {
         ON CONFLICT (id) DO UPDATE SET
           ${updateClause},
           updated_at = CURRENT_TIMESTAMP
-        RETURNING *
+        
       `,
       values
     )

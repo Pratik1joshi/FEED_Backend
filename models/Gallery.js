@@ -45,7 +45,7 @@ class Gallery {
         title, description, image_url, thumbnail_url, category, project_id, event_id,
         alt_text, photographer, location, taken_date, tags, featured, sort_order, is_active
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-      RETURNING *
+      
     `;
 
     const values = [
@@ -325,7 +325,7 @@ class Gallery {
       UPDATE gallery 
       SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP 
       WHERE id = $${paramCount}
-      RETURNING *
+      
     `;
 
     const result = await pool.query(query, values);
@@ -397,7 +397,7 @@ class Gallery {
     
     let query = `
       SELECT * FROM gallery 
-      WHERE (title ILIKE $1 OR description ILIKE $2 OR alt_text ILIKE $3 OR photographer ILIKE $4 OR location ILIKE $5) 
+      WHERE (title LIKE $1 OR description LIKE $2 OR alt_text LIKE $3 OR photographer LIKE $4 OR location LIKE $5) 
       AND is_active = true
     `;
     

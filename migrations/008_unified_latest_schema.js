@@ -5,7 +5,7 @@ const createUpdateTimestampFunction = async () => {
     CREATE OR REPLACE FUNCTION update_updated_at_column()
     RETURNS TRIGGER AS $$
     BEGIN
-      NEW.updated_at = CURRENT_TIMESTAMP;
+      NEW.updated_at = CURRENT_DATETIME;
       RETURN NEW;
     END;
     $$ language 'plpgsql';
@@ -31,21 +31,21 @@ const createTables = async () => {
 
     await query(`
       CREATE TABLE IF NOT EXISTS admins (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) DEFAULT 'admin' CHECK (role IN ('admin', 'super_admin')),
         is_active BOOLEAN DEFAULT true,
-        last_login TIMESTAMP,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        last_login DATETIME,
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS timeline (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         year VARCHAR(10) NOT NULL,
         title VARCHAR(200) NOT NULL,
         description TEXT NOT NULL,
@@ -66,8 +66,8 @@ const createTables = async () => {
         featured BOOLEAN DEFAULT true,
         is_active BOOLEAN DEFAULT true,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
@@ -103,8 +103,8 @@ const createTables = async () => {
         smtp_password TEXT,
         contact_form_recipient_email VARCHAR(255),
         newsletter_recipient_email VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
@@ -178,7 +178,7 @@ const createTables = async () => {
 
     await query(`
       CREATE TABLE IF NOT EXISTS services (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         description TEXT NOT NULL,
@@ -194,14 +194,14 @@ const createTables = async () => {
         features JSONB DEFAULT '[]',
         case_studies JSONB DEFAULT '[]',
         image VARCHAR(500),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS projects (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         description TEXT NOT NULL,
@@ -231,14 +231,14 @@ const createTables = async () => {
         impact JSONB DEFAULT '{}',
         featured BOOLEAN DEFAULT false,
         tags JSONB DEFAULT '[]',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS team_members (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE,
         position VARCHAR(255) NOT NULL,
@@ -255,14 +255,28 @@ const createTables = async () => {
         awards JSONB DEFAULT '[]',
         is_active BOOLEAN DEFAULT true,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
+      )
+    `);
+
+    await query(`
+      CREATE TABLE IF NOT EXISTS team_member_options (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        option_type VARCHAR(20) NOT NULL CHECK (option_type IN ('role', 'department')),
+        label VARCHAR(255) NOT NULL,
+        slug VARCHAR(255) NOT NULL,
+        sort_order INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT true,
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME,
+        UNIQUE(option_type, slug)
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS events (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         subtitle VARCHAR(255),
@@ -286,14 +300,14 @@ const createTables = async () => {
         contact_info JSONB DEFAULT '{}',
         featured BOOLEAN DEFAULT false,
         tags JSONB DEFAULT '[]',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS publications (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         subtitle VARCHAR(255),
@@ -314,14 +328,14 @@ const createTables = async () => {
         downloads INTEGER DEFAULT 0,
         featured BOOLEAN DEFAULT false,
         is_public BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS news (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         excerpt TEXT,
@@ -337,14 +351,14 @@ const createTables = async () => {
         views INTEGER DEFAULT 0,
         meta_title VARCHAR(255),
         meta_description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS press_releases (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         content TEXT NOT NULL,
@@ -356,20 +370,20 @@ const createTables = async () => {
         attachments JSONB DEFAULT '[]',
         is_published BOOLEAN DEFAULT true,
         featured BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS blog_posts (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(500) NOT NULL,
         slug VARCHAR(500) UNIQUE NOT NULL,
         excerpt TEXT,
         content TEXT NOT NULL,
         image VARCHAR(1000),
-        publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        publish_date DATETIME DEFAULT CURRENT_DATETIME,
         author_name VARCHAR(200),
         author_title VARCHAR(200),
         author_avatar VARCHAR(1000),
@@ -381,14 +395,14 @@ const createTables = async () => {
         featured BOOLEAN DEFAULT false,
         read_time VARCHAR(20),
         views INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS pages (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         slug VARCHAR(255) UNIQUE NOT NULL,
         title VARCHAR(255),
         subtitle VARCHAR(500),
@@ -396,14 +410,14 @@ const createTables = async () => {
         image_url VARCHAR(255),
         meta_data JSONB DEFAULT '{}',
         is_published BOOLEAN DEFAULT true,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_DATETIME,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS gallery (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         image_url VARCHAR(500) NOT NULL,
@@ -419,14 +433,14 @@ const createTables = async () => {
         featured BOOLEAN DEFAULT false,
         sort_order INTEGER DEFAULT 0,
         is_active BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS videos (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         video_url VARCHAR(500) NOT NULL,
@@ -441,14 +455,14 @@ const createTables = async () => {
         featured BOOLEAN DEFAULT false,
         views INTEGER DEFAULT 0,
         is_active BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS awards (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         awarding_organization VARCHAR(255) NOT NULL,
@@ -460,19 +474,19 @@ const createTables = async () => {
         certificate_url VARCHAR(500),
         recognition_level VARCHAR(100),
         featured BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
     await query(`
       CREATE TABLE IF NOT EXISTS admin_password_resets (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
         token_hash VARCHAR(128) NOT NULL UNIQUE,
-        expires_at TIMESTAMP NOT NULL,
-        used_at TIMESTAMP,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        expires_at DATETIME NOT NULL,
+        used_at DATETIME,
+        created_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
 
@@ -552,6 +566,10 @@ const createTables = async () => {
     await query(`CREATE INDEX IF NOT EXISTS idx_team_department ON team_members(department);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_team_sort_order ON team_members(sort_order);`);
 
+    await query(`CREATE INDEX IF NOT EXISTS idx_team_member_options_type ON team_member_options(option_type);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_team_member_options_active ON team_member_options(is_active);`);
+    await query(`CREATE INDEX IF NOT EXISTS idx_team_member_options_sort_order ON team_member_options(sort_order);`);
+
     await query(`CREATE INDEX IF NOT EXISTS idx_events_slug ON events(slug);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_events_date ON events(event_date);`);
     await query(`CREATE INDEX IF NOT EXISTS idx_events_status ON events(status);`);
@@ -607,6 +625,7 @@ const createTables = async () => {
       'services',
       'projects',
       'team_members',
+      'team_member_options',
       'events',
       'publications',
       'news',
@@ -643,6 +662,7 @@ const dropTables = async () => {
     await query('DROP TABLE IF EXISTS news CASCADE');
     await query('DROP TABLE IF EXISTS publications CASCADE');
     await query('DROP TABLE IF EXISTS events CASCADE');
+    await query('DROP TABLE IF EXISTS team_member_options CASCADE');
     await query('DROP TABLE IF EXISTS team_members CASCADE');
     await query('DROP TABLE IF EXISTS projects CASCADE');
     await query('DROP TABLE IF EXISTS services CASCADE');

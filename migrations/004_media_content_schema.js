@@ -5,7 +5,7 @@ const migrations = [
     name: 'create_awards_table',
     up: `
       CREATE TABLE IF NOT EXISTS awards (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         organization VARCHAR(255) NOT NULL,
         description TEXT,
@@ -18,8 +18,8 @@ const migrations = [
         certificate_url VARCHAR(500),
         featured BOOLEAN DEFAULT FALSE,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
       
       CREATE INDEX IF NOT EXISTS idx_awards_category ON awards(category);
@@ -31,7 +31,7 @@ const migrations = [
     name: 'create_gallery_table',
     up: `
       CREATE TABLE IF NOT EXISTS gallery (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         image_url VARCHAR(500) NOT NULL,
@@ -42,8 +42,8 @@ const migrations = [
         photographer VARCHAR(255),
         featured BOOLEAN DEFAULT FALSE,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
       
       CREATE INDEX IF NOT EXISTS idx_gallery_category ON gallery(category);
@@ -55,7 +55,7 @@ const migrations = [
     name: 'create_videos_table',
     up: `
       CREATE TABLE IF NOT EXISTS videos (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         video_url VARCHAR(500) NOT NULL,
@@ -64,13 +64,13 @@ const migrations = [
         category VARCHAR(100),
         duration VARCHAR(20),
         tags JSONB DEFAULT '[]',
-        publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        publish_date DATETIME DEFAULT CURRENT_DATETIME,
         featured BOOLEAN DEFAULT FALSE,
         sort_order INTEGER DEFAULT 0,
         views INTEGER DEFAULT 0,
         is_published BOOLEAN DEFAULT TRUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
       
       CREATE INDEX IF NOT EXISTS idx_videos_category ON videos(category);
@@ -83,7 +83,7 @@ const migrations = [
     name: 'create_press_table',
     up: `
       CREATE TABLE IF NOT EXISTS press (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         excerpt TEXT,
         content TEXT,
@@ -91,13 +91,13 @@ const migrations = [
         slug VARCHAR(255) UNIQUE,
         category VARCHAR(100),
         tags JSONB DEFAULT '[]',
-        publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        publish_date DATETIME DEFAULT CURRENT_DATETIME,
         download_url VARCHAR(500),
         featured BOOLEAN DEFAULT FALSE,
         sort_order INTEGER DEFAULT 0,
         is_published BOOLEAN DEFAULT TRUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
       
       CREATE INDEX IF NOT EXISTS idx_press_category ON press(category);

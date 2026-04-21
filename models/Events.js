@@ -53,7 +53,7 @@ class Events {
        contact_info, featured, tags) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, 
        $17, $18, $19, $20, $21, $22, $23) 
-       RETURNING *`,
+       `,
       [title, slug, subtitle, description, full_description, event_date, end_date,
        event_time, location, venue, organizer, category, status, capacity,
        registered_attendees, ticket_price, JSON.stringify(images), JSON.stringify(speakers),
@@ -228,7 +228,7 @@ class Events {
     
     const result = await pool.query(
       `UPDATE events SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $${values.length} RETURNING *`,
+       WHERE id = $${values.length} `,
       values
     );
     
@@ -236,7 +236,7 @@ class Events {
   }
 
   static async delete(id) {
-    const result = await pool.query('DELETE FROM events WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM events WHERE id = $1 ', [id]);
     return result.rows[0];
   }
 
@@ -245,7 +245,7 @@ class Events {
     
     let query = `
       SELECT * FROM events 
-      WHERE (title ILIKE $1 OR description ILIKE $1 OR location ILIKE $1 OR venue ILIKE $1)
+      WHERE (title LIKE $1 OR description LIKE $1 OR location LIKE $1 OR venue LIKE $1)
     `;
     const params = [`%${searchTerm}%`];
     let paramCount = 1;
@@ -264,9 +264,9 @@ class Events {
 
     query += `
       ORDER BY 
-        CASE WHEN title ILIKE $1 THEN 1
-             WHEN description ILIKE $1 THEN 2
-             WHEN location ILIKE $1 THEN 3
+        CASE WHEN title LIKE $1 THEN 1
+             WHEN description LIKE $1 THEN 2
+             WHEN location LIKE $1 THEN 3
              ELSE 4 END,
         event_date ASC
       LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}
@@ -283,7 +283,7 @@ class Events {
       `UPDATE events 
        SET registered_attendees = registered_attendees + 1 
        WHERE id = $1 AND (capacity IS NULL OR registered_attendees < capacity)
-       RETURNING *`,
+       `,
       [eventId]
     );
     

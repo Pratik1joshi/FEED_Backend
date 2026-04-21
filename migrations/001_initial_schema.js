@@ -7,15 +7,15 @@ const createTables = async () => {
     // Create admins table
     await query(`
       CREATE TABLE IF NOT EXISTS admins (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) DEFAULT 'admin' CHECK (role IN ('admin', 'super_admin')),
         is_active BOOLEAN DEFAULT true,
-        last_login TIMESTAMP,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        last_login DATETIME,
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
     console.log('✅ Admins table created');
@@ -23,7 +23,7 @@ const createTables = async () => {
     // Create timeline table
     await query(`
       CREATE TABLE IF NOT EXISTS timeline (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         year VARCHAR(10) NOT NULL,
         title VARCHAR(200) NOT NULL,
         description TEXT NOT NULL,
@@ -40,8 +40,8 @@ const createTables = async () => {
         featured BOOLEAN DEFAULT true,
         is_active BOOLEAN DEFAULT true,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
     console.log('✅ Timeline table created');
@@ -79,8 +79,8 @@ const createTables = async () => {
         smtp_password TEXT,
         contact_form_recipient_email VARCHAR(255),
         newsletter_recipient_email VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       )
     `);
     console.log('✅ Site settings table created');
@@ -151,16 +151,7 @@ const createTables = async () => {
     `);
     console.log('✅ Database indexes created');
 
-    // Create trigger for updated_at timestamp
-    await query(`
-      CREATE OR REPLACE FUNCTION update_updated_at_column()
-      RETURNS TRIGGER AS $$
-      BEGIN
-          NEW.updated_at = CURRENT_TIMESTAMP;
-          RETURN NEW;
-      END;
-      $$ language 'plpgsql';
-    `);
+    
 
     await query(`
       DROP TRIGGER IF EXISTS update_admins_updated_at ON admins;

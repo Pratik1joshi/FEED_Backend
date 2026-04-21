@@ -43,7 +43,7 @@ class Videos {
         title, description, video_url, thumbnail_url, duration, category, project_id, event_id,
         youtube_id, vimeo_id, tags, featured, views, is_active
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-      RETURNING *
+      
     `;
 
     const values = [
@@ -326,7 +326,7 @@ class Videos {
       UPDATE videos 
       SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP 
       WHERE id = $${paramCount}
-      RETURNING *
+      
     `;
 
     const result = await pool.query(query, values);
@@ -392,7 +392,7 @@ class Videos {
     
     let query = `
       SELECT * FROM videos 
-      WHERE (title ILIKE $1 OR description ILIKE $2) AND is_active = true
+      WHERE (title LIKE $1 OR description LIKE $2) AND is_active = true
     `;
     
     const values = [`%${searchTerm}%`, `%${searchTerm}%`];

@@ -33,7 +33,7 @@ class Services {
        status, featured, sort_order, meta_title, meta_description, long_description, 
        features, case_studies, image) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) 
-       RETURNING *`,
+       `,
       [title, slug, description, short_description, icon, service_type, status, featured, 
        sort_order, meta_title, meta_description, long_description, JSON.stringify(features), 
        JSON.stringify(case_studies), image]
@@ -118,7 +118,7 @@ class Services {
     
     const result = await pool.query(
       `UPDATE services SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $${values.length} RETURNING *`,
+       WHERE id = $${values.length} `,
       values
     );
     
@@ -126,7 +126,7 @@ class Services {
   }
 
   static async delete(id) {
-    const result = await pool.query('DELETE FROM services WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM services WHERE id = $1 ', [id]);
     return result.rows[0];
   }
 
@@ -135,11 +135,11 @@ class Services {
     
     const result = await pool.query(
       `SELECT * FROM services 
-       WHERE title ILIKE $1 OR description ILIKE $1 OR short_description ILIKE $1 OR long_description ILIKE $1
+       WHERE title LIKE $1 OR description LIKE $1 OR short_description LIKE $1 OR long_description LIKE $1
        ORDER BY 
-         CASE WHEN title ILIKE $1 THEN 1
-              WHEN short_description ILIKE $1 THEN 2
-              WHEN long_description ILIKE $1 THEN 3
+         CASE WHEN title LIKE $1 THEN 1
+              WHEN short_description LIKE $1 THEN 2
+              WHEN long_description LIKE $1 THEN 3
               ELSE 4 END,
          sort_order ASC
        LIMIT $2 OFFSET $3`,

@@ -39,7 +39,7 @@ class Publications {
        authors, abstract, description, full_content, download_url, image_url, tags, 
        pages, language, doi, citations, downloads, featured, is_public) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) 
-       RETURNING *`,
+       `,
       [title, slug, subtitle, type, category, publication_date, JSON.stringify(authors),
        abstract, description, full_content, download_url, image_url, JSON.stringify(tags),
        pages, language, doi, citations, downloads, featured, is_public]
@@ -145,7 +145,7 @@ class Publications {
     
     const result = await pool.query(
       `SELECT * FROM publications 
-       WHERE authors::text ILIKE $1 AND is_public = true
+       WHERE authors::text LIKE $1 AND is_public = true
        ORDER BY publication_date DESC 
        LIMIT $2 OFFSET $3`,
       [`%${authorName}%`, limit, offset]
@@ -187,7 +187,7 @@ class Publications {
     
     const result = await pool.query(
       `UPDATE publications SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $${values.length} RETURNING *`,
+       WHERE id = $${values.length} `,
       values
     );
     
@@ -195,13 +195,13 @@ class Publications {
   }
 
   static async delete(id) {
-    const result = await pool.query('DELETE FROM publications WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM publications WHERE id = $1 ', [id]);
     return result.rows[0];
   }
 
   static async incrementDownload(id) {
     const result = await pool.query(
-      'UPDATE publications SET downloads = downloads + 1 WHERE id = $1 RETURNING *',
+      'UPDATE publications SET downloads = downloads + 1 WHERE id = $1 ',
       [id]
     );
     
@@ -210,7 +210,7 @@ class Publications {
 
   static async updateCitations(id, citationCount) {
     const result = await pool.query(
-      'UPDATE publications SET citations = $1 WHERE id = $2 RETURNING *',
+      'UPDATE publications SET citations = $1 WHERE id = $2 ',
       [citationCount, id]
     );
     
@@ -222,7 +222,7 @@ class Publications {
     
     let query = `
       SELECT * FROM publications 
-      WHERE (title ILIKE $1 OR abstract ILIKE $1 OR description ILIKE $1 OR authors::text ILIKE $1)
+      WHERE (title LIKE $1 OR abstract LIKE $1 OR description LIKE $1 OR authors::text LIKE $1)
       AND is_public = true
     `;
     const params = [`%${searchTerm}%`];
@@ -242,9 +242,9 @@ class Publications {
 
     query += `
       ORDER BY 
-        CASE WHEN title ILIKE $1 THEN 1
-             WHEN abstract ILIKE $1 THEN 2
-             WHEN authors::text ILIKE $1 THEN 3
+        CASE WHEN title LIKE $1 THEN 1
+             WHEN abstract LIKE $1 THEN 2
+             WHEN authors::text LIKE $1 THEN 3
              ELSE 4 END,
         publication_date DESC
       LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}

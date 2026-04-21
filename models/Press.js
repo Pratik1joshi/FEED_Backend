@@ -37,7 +37,7 @@ class Press {
         title, slug, content, release_date, contact_person, contact_email, contact_phone,
         images, attachments, is_published, featured
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-      RETURNING *
+      
     `;
 
     const values = [
@@ -225,7 +225,7 @@ class Press {
       UPDATE press_releases 
       SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP 
       WHERE id = $${paramCount}
-      RETURNING *
+      
     `;
 
     const result = await pool.query(query, values);
@@ -274,7 +274,7 @@ class Press {
     
     let query = `
       SELECT * FROM press_releases 
-      WHERE (title ILIKE $1 OR content ILIKE $2) AND is_published = true
+      WHERE (title LIKE $1 OR content LIKE $2) AND is_published = true
     `;
     
     const values = [`%${searchTerm}%`, `%${searchTerm}%`];

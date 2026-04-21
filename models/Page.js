@@ -26,7 +26,7 @@ class Page {
          meta_data = EXCLUDED.meta_data,
          is_published = EXCLUDED.is_published,
          updated_at = CURRENT_TIMESTAMP
-       RETURNING *`,
+       `,
       [slug, title, subtitle, content, image_url, meta_data || {}, is_published ?? true]
     );
     return result.rows[0];

@@ -40,7 +40,7 @@ class TeamMembers {
        image_url, email, linkedin, publications, years_experience, languages, awards, 
        is_active, sort_order) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) 
-       RETURNING *`,
+       `,
       [name, slug, position, department, bio, JSON.stringify(expertise), JSON.stringify(education),
        image_url, email, linkedin, publications, years_experience, JSON.stringify(languages), 
        JSON.stringify(awards), is_active, sort_order]
@@ -146,7 +146,7 @@ class TeamMembers {
     
     const result = await pool.query(
       `UPDATE team_members SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $${values.length} RETURNING *`,
+       WHERE id = $${values.length} `,
       values
     );
     
@@ -154,7 +154,7 @@ class TeamMembers {
   }
 
   static async delete(id) {
-    const result = await pool.query('DELETE FROM team_members WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM team_members WHERE id = $1 ', [id]);
     return result.rows[0];
   }
 
@@ -163,7 +163,7 @@ class TeamMembers {
     
     let query = `
       SELECT * FROM team_members 
-      WHERE (name ILIKE $1 OR position ILIKE $1 OR bio ILIKE $1)
+      WHERE (name LIKE $1 OR position LIKE $1 OR bio LIKE $1)
       AND is_active = true
     `;
     const params = [`%${searchTerm}%`];
@@ -177,8 +177,8 @@ class TeamMembers {
 
     query += `
       ORDER BY 
-        CASE WHEN name ILIKE $1 THEN 1
-             WHEN position ILIKE $1 THEN 2
+        CASE WHEN name LIKE $1 THEN 1
+             WHEN position LIKE $1 THEN 2
              ELSE 3 END,
         sort_order ASC
       LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}

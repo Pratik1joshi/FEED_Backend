@@ -12,7 +12,7 @@ async function migrate() {
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS pages (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         slug VARCHAR(255) UNIQUE NOT NULL,
         title VARCHAR(255),
         subtitle VARCHAR(500),
@@ -20,8 +20,8 @@ async function migrate() {
         image_url VARCHAR(255),
         meta_data JSONB DEFAULT '{}',
         is_published BOOLEAN DEFAULT true,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_DATETIME,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_DATETIME
       )
     `);
 

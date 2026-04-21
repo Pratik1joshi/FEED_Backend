@@ -30,7 +30,7 @@ class Admin {
     const result = await query(`
       INSERT INTO admins (name, email, password, role, is_active)
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING id, name, email, role, is_active, last_login, created_at, updated_at
+      
     `, [admin.name, admin.email, admin.password, admin.role, admin.is_active]);
     
     return result.rows[0];
@@ -66,7 +66,7 @@ class Admin {
   // Update last login
   static async updateLastLogin(id) {
     const result = await query(
-      'UPDATE admins SET last_login = CURRENT_TIMESTAMP WHERE id = $1 RETURNING *',
+      'UPDATE admins SET last_login = CURRENT_TIMESTAMP WHERE id = $1 ',
       [id]
     );
     return result.rows[0];
@@ -78,7 +78,7 @@ class Admin {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     
     const result = await query(
-      'UPDATE admins SET password = $1 WHERE id = $2 RETURNING id, name, email, role',
+      'UPDATE admins SET password = $1 WHERE id = $2 ',
       [hashedPassword, id]
     );
     return result.rows[0];
@@ -112,7 +112,7 @@ class Admin {
       UPDATE admins 
       SET ${updates.join(', ')}
       WHERE id = $${++paramCount} AND is_active = true
-      RETURNING id, name, email, role, is_active, last_login, created_at, updated_at
+      
     `, values);
 
     return result.rows[0];
@@ -132,7 +132,7 @@ class Admin {
   // Deactivate admin (soft delete)
   static async deactivate(id) {
     const result = await query(
-      'UPDATE admins SET is_active = false WHERE id = $1 RETURNING id, name, email',
+      'UPDATE admins SET is_active = false WHERE id = $1 ',
       [id]
     );
     return result.rows[0];
@@ -191,7 +191,7 @@ class Admin {
       `
         INSERT INTO admin_password_resets (admin_id, token_hash, expires_at)
         VALUES ($1, $2, $3)
-        RETURNING id, admin_id, token_hash, expires_at, used_at, created_at
+        
       `,
       [adminId, tokenHash, expiresAt]
     );

@@ -13,7 +13,7 @@ const runMigration = async () => {
     // Timeline table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS timeline (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         year INTEGER NOT NULL,
         title VARCHAR(255) NOT NULL,
         description TEXT NOT NULL,
@@ -22,15 +22,15 @@ const runMigration = async () => {
         featured BOOLEAN DEFAULT true,
         is_active BOOLEAN DEFAULT true,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Blog table (if needed for blog functionality)
     await pool.query(`
       CREATE TABLE IF NOT EXISTS blog (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         excerpt TEXT,
@@ -50,8 +50,8 @@ const runMigration = async () => {
         meta_title VARCHAR(255),
         meta_description TEXT,
         seo_keywords JSONB DEFAULT '[]',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 

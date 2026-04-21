@@ -13,7 +13,7 @@ const runMigration = async () => {
     // Services table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS services (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         description TEXT NOT NULL,
@@ -25,15 +25,15 @@ const runMigration = async () => {
         sort_order INTEGER DEFAULT 0,
         meta_title VARCHAR(255),
         meta_description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Projects table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS projects (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         description TEXT NOT NULL,
@@ -62,15 +62,15 @@ const runMigration = async () => {
         impact JSONB DEFAULT '{}',
         featured BOOLEAN DEFAULT false,
         tags JSONB DEFAULT '[]',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Team members table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS team_members (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         position VARCHAR(255) NOT NULL,
         department VARCHAR(100),
@@ -86,15 +86,15 @@ const runMigration = async () => {
         awards JSONB DEFAULT '[]',
         is_active BOOLEAN DEFAULT true,
         sort_order INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Events table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS events (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         subtitle VARCHAR(255),
@@ -118,15 +118,15 @@ const runMigration = async () => {
         contact_info JSONB DEFAULT '{}',
         featured BOOLEAN DEFAULT false,
         tags JSONB DEFAULT '[]',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Publications table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS publications (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         subtitle VARCHAR(255),
@@ -147,15 +147,15 @@ const runMigration = async () => {
         downloads INTEGER DEFAULT 0,
         featured BOOLEAN DEFAULT false,
         is_public BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // News/Blog table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS news (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         excerpt TEXT,
@@ -171,15 +171,15 @@ const runMigration = async () => {
         views INTEGER DEFAULT 0,
         meta_title VARCHAR(255),
         meta_description TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Gallery table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS gallery (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         image_url VARCHAR(500) NOT NULL,
@@ -195,15 +195,15 @@ const runMigration = async () => {
         featured BOOLEAN DEFAULT false,
         sort_order INTEGER DEFAULT 0,
         is_active BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Videos table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS videos (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         video_url VARCHAR(500) NOT NULL,
@@ -218,15 +218,15 @@ const runMigration = async () => {
         featured BOOLEAN DEFAULT false,
         views INTEGER DEFAULT 0,
         is_active BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Awards table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS awards (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         description TEXT,
         awarding_organization VARCHAR(255) NOT NULL,
@@ -238,15 +238,15 @@ const runMigration = async () => {
         certificate_url VARCHAR(500),
         recognition_level VARCHAR(100),
         featured BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 
     // Press releases table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS press_releases (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
         slug VARCHAR(255) UNIQUE NOT NULL,
         content TEXT NOT NULL,
@@ -258,8 +258,8 @@ const runMigration = async () => {
         attachments JSONB DEFAULT '[]',
         is_published BOOLEAN DEFAULT true,
         featured BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 

@@ -34,7 +34,7 @@ class News {
        publication_date, image_url, images, tags, featured, is_published, 
        views, meta_title, meta_description) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) 
-       RETURNING *`,
+       `,
       [title, slug, excerpt, content, author, category, publication_date,
        image_url, JSON.stringify(images), JSON.stringify(tags), featured,
        is_published, views, meta_title, meta_description]
@@ -174,7 +174,7 @@ class News {
     
     const result = await pool.query(
       `UPDATE news SET ${setClause}, updated_at = CURRENT_TIMESTAMP 
-       WHERE id = $${values.length} RETURNING *`,
+       WHERE id = $${values.length} `,
       values
     );
     
@@ -182,7 +182,7 @@ class News {
   }
 
   static async delete(id) {
-    const result = await pool.query('DELETE FROM news WHERE id = $1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM news WHERE id = $1 ', [id]);
     return result.rows[0];
   }
 
@@ -191,7 +191,7 @@ class News {
     
     let query = `
       SELECT * FROM news 
-      WHERE (title ILIKE $1 OR excerpt ILIKE $1 OR content ILIKE $1)
+      WHERE (title LIKE $1 OR excerpt LIKE $1 OR content LIKE $1)
       AND is_published = true
     `;
     const params = [`%${searchTerm}%`];
@@ -205,8 +205,8 @@ class News {
 
     query += `
       ORDER BY 
-        CASE WHEN title ILIKE $1 THEN 1
-             WHEN excerpt ILIKE $1 THEN 2
+        CASE WHEN title LIKE $1 THEN 1
+             WHEN excerpt LIKE $1 THEN 2
              ELSE 3 END,
         publication_date DESC
       LIMIT $${paramCount + 1} OFFSET $${paramCount + 2}

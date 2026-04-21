@@ -37,7 +37,7 @@ class Awards {
         title, description, awarding_organization, award_date, category, recognition_level,
         project_id, team_member_id, image_url, certificate_url, featured
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-      RETURNING *
+      
     `;
 
     const values = [
@@ -214,7 +214,7 @@ class Awards {
       UPDATE awards 
       SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP 
       WHERE id = $${paramCount}
-      RETURNING *
+      
     `;
 
     const result = await pool.query(query, values);
@@ -276,7 +276,7 @@ class Awards {
     
     let query = `
       SELECT * FROM awards 
-      WHERE (title ILIKE $1 OR awarding_organization ILIKE $2 OR description ILIKE $3)
+      WHERE (title LIKE $1 OR awarding_organization LIKE $2 OR description LIKE $3)
     `;
     
     const values = [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`];

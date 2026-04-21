@@ -8,13 +8,13 @@ const migration = {
     // Create blog_posts table
     await db.query(`
       CREATE TABLE IF NOT EXISTS blog_posts (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(500) NOT NULL,
         slug VARCHAR(500) UNIQUE NOT NULL,
         excerpt TEXT,
         content TEXT NOT NULL,
         image VARCHAR(1000),
-        publish_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        publish_date DATETIME DEFAULT CURRENT_DATETIME,
         author_name VARCHAR(200),
         author_title VARCHAR(200),
         author_avatar VARCHAR(1000),
@@ -24,8 +24,8 @@ const migration = {
         featured BOOLEAN DEFAULT false,
         read_time VARCHAR(20),
         views INTEGER DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at DATETIME DEFAULT CURRENT_DATETIME,
+        updated_at DATETIME DEFAULT CURRENT_DATETIME
       );
     `);
 

@@ -13,7 +13,7 @@
 //     // Services table
 //     await pool.query(`
 //       CREATE TABLE IF NOT EXISTS services (
-//         id SERIAL PRIMARY KEY,
+//         id INT AUTO_INCREMENT PRIMARY KEY,
 //         title VARCHAR(255) NOT NULL,
 //         slug VARCHAR(255) UNIQUE NOT NULL,
 //         description TEXT NOT NULL,
@@ -25,15 +25,15 @@
 //         sort_order INTEGER DEFAULT 0,
 //         meta_title VARCHAR(255),
 //         meta_description TEXT,
-//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//         created_at DATETIME DEFAULT CURRENT_DATETIME,
+//         updated_at DATETIME DEFAULT CURRENT_DATETIME
 //       );
 //     `);
 //     console.log('Services table created successfully');
 
 // -- Projects table
 // CREATE TABLE IF NOT EXISTS projects (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   slug VARCHAR(255) UNIQUE NOT NULL,
 //   description TEXT NOT NULL,
@@ -61,13 +61,13 @@
 //   impact JSONB DEFAULT '{}',
 //   featured BOOLEAN DEFAULT false,
 //   tags JSONB DEFAULT '[]',
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Team members table
 // CREATE TABLE IF NOT EXISTS team_members (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   name VARCHAR(255) NOT NULL,
 //   position VARCHAR(255) NOT NULL,
 //   department VARCHAR(100),
@@ -83,13 +83,13 @@
 //   awards JSONB DEFAULT '[]',
 //   is_active BOOLEAN DEFAULT true,
 //   sort_order INTEGER DEFAULT 0,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Events table
 // CREATE TABLE IF NOT EXISTS events (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   slug VARCHAR(255) UNIQUE NOT NULL,
 //   subtitle VARCHAR(255),
@@ -113,13 +113,13 @@
 //   contact_info JSONB DEFAULT '{}',
 //   featured BOOLEAN DEFAULT false,
 //   tags JSONB DEFAULT '[]',
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Publications table
 // CREATE TABLE IF NOT EXISTS publications (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   slug VARCHAR(255) UNIQUE NOT NULL,
 //   subtitle VARCHAR(255),
@@ -140,13 +140,13 @@
 //   downloads INTEGER DEFAULT 0,
 //   featured BOOLEAN DEFAULT false,
 //   is_public BOOLEAN DEFAULT true,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- News/Blog table
 // CREATE TABLE IF NOT EXISTS news (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   slug VARCHAR(255) UNIQUE NOT NULL,
 //   excerpt TEXT,
@@ -162,13 +162,13 @@
 //   views INTEGER DEFAULT 0,
 //   meta_title VARCHAR(255),
 //   meta_description TEXT,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Gallery table
 // CREATE TABLE IF NOT EXISTS gallery (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   description TEXT,
 //   image_url VARCHAR(500) NOT NULL,
@@ -184,13 +184,13 @@
 //   featured BOOLEAN DEFAULT false,
 //   sort_order INTEGER DEFAULT 0,
 //   is_active BOOLEAN DEFAULT true,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Videos table
 // CREATE TABLE IF NOT EXISTS videos (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   description TEXT,
 //   video_url VARCHAR(500) NOT NULL,
@@ -205,13 +205,13 @@
 //   featured BOOLEAN DEFAULT false,
 //   views INTEGER DEFAULT 0,
 //   is_active BOOLEAN DEFAULT true,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Awards table
 // CREATE TABLE IF NOT EXISTS awards (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   description TEXT,
 //   awarding_organization VARCHAR(255) NOT NULL,
@@ -223,13 +223,13 @@
 //   certificate_url VARCHAR(500),
 //   recognition_level VARCHAR(100), -- Local, National, International
 //   featured BOOLEAN DEFAULT false,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Press releases table
 // CREATE TABLE IF NOT EXISTS press_releases (
-//   id SERIAL PRIMARY KEY,
+//   id INT AUTO_INCREMENT PRIMARY KEY,
 //   title VARCHAR(255) NOT NULL,
 //   slug VARCHAR(255) UNIQUE NOT NULL,
 //   content TEXT NOT NULL,
@@ -241,8 +241,8 @@
 //   attachments JSONB DEFAULT '[]',
 //   is_published BOOLEAN DEFAULT true,
 //   featured BOOLEAN DEFAULT false,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+//   created_at DATETIME DEFAULT CURRENT_DATETIME,
+//   updated_at DATETIME DEFAULT CURRENT_DATETIME
 // );
 
 // -- Create indexes for better performance
