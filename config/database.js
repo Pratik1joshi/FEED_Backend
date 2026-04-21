@@ -4,7 +4,7 @@ const databaseUrl = process.env.DATABASE_URL;
 
 // Create MySQL connection pool
 const pool = mysql.createPool({
-  uri: databaseUrl || 'mysql://root:@localhost:3306/feed_nepal',
+  uri: databaseUrl || 'mysql://root:admin@localhost:3306/feed_nepal',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
